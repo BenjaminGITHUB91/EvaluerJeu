@@ -18,6 +18,13 @@ public class Jeu {
         supports = new ArrayList<>();
     }
 
+    public void Afficher(){
+        System.out.println(this);
+        for (Support unSupport : supports){
+            System.out.println(unSupport);
+        }
+    }
+
     @Override
     public String toString(){
         String str = "";
