@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -26,9 +27,13 @@ public class Application {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Remplit l'application avec des données initiales : administrateur, testeurs, joueurs,
+     * leurs jeux possédés et leurs évaluations.
+     */
     private void Remplissage(){
         Joueur admin = new Administrateur("admin");
-        Joueur testeur1 = new Testeur("testeur1");
+        Joueur testeur1 = new Testeur("don");
         Joueur testeur2 = new Testeur("testeur2");
         Joueur joueur1 = new Joueur("Benjamin");
 
@@ -50,6 +55,19 @@ public class Application {
         testeur1.evaluations.add(evalT1);
         RecupererUnJeu("grand theft auto V").supports.get(0).evaluationTesteurs.add(evalT1);
 
+        EvaluationJoueur evalJ1 = new EvaluationJoueur("05-05-2026" , "J'aime beaucoup ce jeu !", RecupererUnJeu("grand theft auto V").supports.get(0),joueur1 , 9.99f);
+        evalJ1.utiliteP = 57;
+        evalJ1.utiliteM = 2;
+        evalJ1.signalement = 1;
+        RecupererUnJeu("grand theft auto V").supports.get(0).evaluationJoueurs.add(evalJ1);
+        joueur1.evaluations.add(evalJ1);
+
+        EvaluationJoueur evalJ2 = new EvaluationJoueur("01-05-2026" , "J'adore ! Incroyable quand il a fallu choisir entre tuer Micheal et Trevor !", RecupererUnJeu("grand theft auto V").supports.get(0), testeur1 , 8.88f);
+        evalJ2.utiliteP = 3;
+        evalJ2.utiliteM = 34562;
+        evalJ2.signalement = 109876345;
+        RecupererUnJeu("grand theft auto V").supports.get(0).evaluationJoueurs.add(evalJ2);
+        testeur1.evaluations.add(evalJ2);
 
         joueurs.add(admin);
         joueurs.add(testeur1);
@@ -62,6 +80,14 @@ public class Application {
         nomJoueurs.add(joueur1.pseudo);
     }
 
+    /**
+     * Ajoute un jeu à la bibliothèque d'un joueur avec un temps de jeu donné.
+     *
+     * @param joueur le joueur auquel ajouter le jeu
+     * @param nomJeu le nom du jeu à ajouter
+     * @param temps le temps de jeu en heures
+     * @return true si le jeu a été trouvé et ajouté, false sinon
+     */
     private boolean AddJeu(Joueur joueur , String nomJeu, Float temps){
         Jeu jeu = RecupererUnJeu(nomJeu);
         if (jeu == null) return false;
@@ -224,6 +250,12 @@ public class Application {
         }
     }
 
+    /**
+     * Récupère un objet Jeu à partir de son nom.
+     *
+     * @param nom le nom du jeu à rechercher (non sensible à la casse)
+     * @return l'objet Jeu correspondant, ou null s'il n'existe pas
+     */
     private Jeu RecupererUnJeu(String nom){
         int indice = nomsJeux.indexOf(nom.toLowerCase());
         if (indice == -1){
@@ -233,12 +265,24 @@ public class Application {
         }
     }
 
+    /**
+     * Demande à l'utilisateur de saisir un nom de jeu et retourne l'objet Jeu correspondant.
+     *
+     * @return l'objet Jeu correspondant au nom saisi, ou null s'il n'existe pas
+     */
     private Jeu RecupererJeuCommande(){
-        System.out.println("Nom du jeu cherche (nom en entier, pas sensible a la casse) :");
+        System.out.println("\nNom du jeu cherche (nom en entier, pas sensible a la casse) :");
         String nom = scanner.nextLine();
         return RecupererUnJeu(nom);
     }
 
+    /**
+     * Vérifie que le choix de l'utilisateur fait partie des choix acceptables.
+     *
+     * @param choixAcceptable tableau des choix valides
+     * @param input la saisie utilisateur à vérifier
+     * @return l'entier correspondant au choix validé
+     */
     private int verifChoix(String [] choixAcceptable , String input){
         Scanner scanner = new Scanner(System.in);
         // si l'user input ne correspond pas a un des choix propose on boucle
@@ -274,6 +318,11 @@ public class Application {
         return verifChoix(choixAcceptable, input);
     }
 
+    /**
+     * Affiche le menu de lancement de l'application et retourne le choix de l'utilisateur.
+     *
+     * @return le choix de l'utilisateur (1, 2, 3 ou 4)
+     */
     private int Lancement(){
         String[] choix = {
                 "Rester en mode anonyme",
@@ -284,6 +333,11 @@ public class Application {
         return ProposerChoix("Veuillez saisir le numero de la commande que vous souhaitez realiser :", choix);
     }
 
+    /**
+     * Gère le processus de connexion d'un utilisateur.
+     *
+     * @return l'objet Joueur connecté, ou null si la connexion a échoué
+     */
     private Joueur Connexion(){
         Joueur joueur = null;
         boolean continuer = true;
@@ -320,6 +374,11 @@ public class Application {
         return joueur;
     }
 
+    /**
+     * Gère le processus d'inscription d'un nouvel utilisateur.
+     *
+     * @return l'objet Joueur créé, ou null si l'inscription a été annulée
+     */
     private Joueur Inscription(){
         System.out.println("---Inscription---");
         System.out.println("Veuillez saisir votre pseudo (attention, ce dernier est sensible a la casse !) :");
@@ -346,6 +405,11 @@ public class Application {
         return joueur;
     }
 
+    /**
+     * Affiche les évaluations de testeurs pour un jeu donné.
+     *
+     * @param nomJeu le nom du jeu dont on veut afficher les évaluations
+     */
     private void AfficherEvaluationTesteur(String nomJeu){
         Jeu jeu = RecupererUnJeu(nomJeu);
         if (jeu != null){
@@ -390,6 +454,9 @@ public class Application {
         return new Object[]{estConnecte, pseudo, role, estJoueur, estTesteur , estAdmin};
     }
 
+    /**
+     * Affiche la liste de tous les membres inscrits dans l'application.
+     */
     private void AfficherMembres(){
         System.out.println("\nListe des membres de l'applications :");
         for (Joueur unJoueur : joueurs){
@@ -397,6 +464,136 @@ public class Application {
         }
     }
 
+    /**
+     * Demande à l'utilisateur de saisir le pseudo d'un joueur et retourne l'objet correspondant.
+     *
+     * @return l'objet Joueur correspondant au pseudo saisi
+     */
+    private Joueur RecupererJoueur(){
+        Joueur joueur = null;
+        System.out.println("Veuillez saisir le pseudo du joueur cherche :");
+        String pseudo = scanner.nextLine();
+        while (! nomJoueurs.contains(pseudo)){
+            System.out.println("Utilisateur non trouve, veuillez recommencer :");
+            pseudo = scanner.nextLine();
+        }
+
+        return joueurs.get(nomJoueurs.indexOf(pseudo));
+    }
+
+    /**
+     * Supprime un joueur de l'application.
+     *
+     * @param joueur le joueur à supprimer
+     */
+    private void SupprimerJoueur(Joueur joueur){
+        joueurs.remove(joueur);
+        nomJoueurs.remove(joueur.pseudo);
+    }
+
+    /**
+     * Permet à un joueur d'utiliser ses jetons pour voter pour un test sur un jeu.
+     *
+     * @param joueur le joueur qui vote
+     * @param jeu le jeu pour lequel voter
+     */
+    private void VoteTestJeu(Joueur joueur , Jeu jeu){
+        int nbJetons = joueur.nbJeton;
+        if (nbJetons > 0 ){
+            System.out.println("Vous avez " + nbJetons + " jetons, combien souhaitez vous utiliser pour demander un test sur ce jeu (ce jeu a deja " + jeu.jetons + " votes) ?");
+            int val = Integer.parseInt(scanner.nextLine());
+            while (val < 0 || val > nbJetons){
+                System.out.println("Saisie incorrecte (Vous pouvez en mettre 0 pour annuler). Recommencer s'il vous plait :");
+                val = Integer.parseInt(scanner.nextLine());
+            }
+            jeu.jetons += val;
+            joueur.nbJeton -= val;
+            System.out.println(val + " jetons places, il vous en reste " + joueur.nbJeton + " ! Total de vote pour ce jeux : " + jeu.jetons);
+        }
+    }
+
+    /**
+     * Permet à l'utilisateur de choisir un support parmi ceux d'un jeu.
+     *
+     * @param jeu le jeu dont on veut choisir un support
+     * @return le support choisi
+     */
+    private Support ChoisirSupport(Jeu jeu){
+        Support support = null;
+        System.out.println("\nListe des supports");
+        String[] choixPossibles =new String[jeu.supports.size()];
+        for (int i = 0 ; i < jeu.supports.size() ; i++){
+            choixPossibles[i] = jeu.supports.get(i).nom;
+        }
+        int choix = ProposerChoix("De quel support souhaitez vous voir le detail ?" , choixPossibles ) - 1;
+        return jeu.supports.get(choix);
+    }
+
+    /**
+     * Demande à l'utilisateur de saisir un temps de jeu.
+     *
+     * @return le temps de jeu saisi en heures
+     */
+    private float DemanderTJ(){
+        float tj = 0f;
+        System.out.println("Quel est votre nouveau temps de jeu ?");
+        tj = Float.parseFloat(scanner.nextLine());
+        while (tj < 0 ){
+            System.out.println("Duree invalide, recommencez : ");
+            tj = Float.parseFloat(scanner.nextLine());
+        }
+        return tj;
+    }
+
+    /**
+     * Permet à l'utilisateur de choisir une évaluation parmi celles d'un support.
+     *
+     * @param support le support dont on veut choisir une évaluation
+     * @return l'évaluation choisie
+     */
+    private Evaluation ChoisirEvaluation(Support support){
+        Evaluation e = null;
+        String[] choixPossibles = new String[support.evaluationJoueurs.size()];
+        for (int i = 0 ; i < support.evaluationJoueurs.size() ; i++){
+            choixPossibles[i] = support.evaluationJoueurs.get(i).auteur.pseudo;
+        }
+        int choix = ProposerChoix("Quelle evaluation ?", choixPossibles);
+        return support.evaluationJoueurs.get(choix-1);
+    }
+
+    /**
+     * Permet à un joueur d'ajouter une nouvelle évaluation pour un support.
+     *
+     * @param joueur le joueur qui ajoute l'évaluation
+     * @param support le support concerné par l'évaluation
+     */
+    private void AjouterEvaluation(Joueur joueur,Support support){
+
+        System.out.println("---Nouvelle Evaluation---");
+        System.out.println("Date : ");
+        String date = scanner.nextLine();
+        System.out.println("Contenu : ");
+        String contenu = scanner.nextLine();
+        System.out.println("Note sur 10 : ");
+        Float note = Float.parseFloat(scanner.nextLine());
+
+        Evaluation e = new EvaluationJoueur(date , contenu , support, joueur , note);
+        joueur.evaluations.add(e);
+        support.evaluationJoueurs.add(e);
+
+    }
+
+    /**
+     * Permet d'évaluer une évaluation existante (utile/désutile).
+     *
+     * @param eval l'évaluation à évaluer
+     */
+    private void Evaluer(EvaluationJoueur eval){
+        System.out.println("Comment evaluer vous cette evaluation ? (+ ou -)");
+        String input = scanner.nextLine();
+        if (input == "+") eval.utiliteP+=1;
+        else if (input == "-") eval.utiliteM -=1;
+    }
     public static void main(String[] args) {
 
         Application monAppli = new Application();
@@ -419,6 +616,7 @@ public class Application {
 
         switch (choix){
             case 1:
+                //rien a faire
                 break;
 
             case 2:
@@ -447,7 +645,7 @@ public class Application {
         estAdmin = (boolean) infosRole[5];
         while (! fermer) {
 
-            System.out.println("\n----Accueil - Compte : " + pseudo + " - Role : " + role + "----");
+            System.out.println("\n----Accueil " + pseudo + " - " + role + "----");
             String[] choixPossibles = new String[]{};
             if (!estConnecte) {
                 choixPossibles = new String[]{
@@ -456,7 +654,7 @@ public class Application {
                         "S'inscrire",
                         "Fermer l'application"
                 };
-            } else if (estJoueur) { //a ce niveau les joueurs et les testeurs ont les memes permissions
+            } else if (estJoueur || estTesteur) { //a ce niveau les joueurs et les testeurs ont les memes permissions
                 choixPossibles = new String[]{
                         "Afficher mon profil",
                         "Chercher un jeu",
@@ -492,6 +690,10 @@ public class Application {
                         estConnecte = (boolean) infosRole[0];
                         pseudo = (String) infosRole[1];
                         role = (String) infosRole[2];
+
+                        estJoueur = (boolean) infosRole[3];
+                        estTesteur = (boolean) infosRole[4];
+                        estAdmin = (boolean) infosRole[5];
                         break;
                     case 4 :    //fermeture
                         fermer = true;
@@ -530,16 +732,122 @@ public class Application {
                         monAppli.AfficherMembres();
                         break;
                     case 7:
-                        break;
+                        Joueur joueurCherche = monAppli.RecupererJoueur();
+                        choixPossibles = new String[]{
+                                "Retourner a l'accueil",
+                                "Supprimer ce compte",
+                                "Promouvoir ce compte"
+                        };
+                        choix = monAppli.ProposerChoix("Que souhaitez vous faire ?", choixPossibles);
+                        switch (choix){
+                            case 1:
+                                //rien a faire
+                                break;
+                            case 2:
+                                choix = monAppli.ProposerChoix("Etes vous sur ? Cette action est irreversible !",new String[]{"oui","non"});
+                                if (choix == 1){
+                                    monAppli.SupprimerJoueur(joueurCherche);
+                                }
+                                break;
 
+                            case 3:
+                                infosRole = VerifRole(joueurCherche);
+                                boolean estJoueurChr = (boolean) infosRole[3];
+                                boolean estTesteurChr = (boolean) infosRole[4];
+
+                                if (estJoueurChr){
+                                    Joueur t = new Testeur(joueurCherche.pseudo);
+                                    t.nbJeton = joueurCherche.nbJeton;
+                                    t.jeuxPossedes = joueurCherche.jeuxPossedes;
+                                    t.evaluations = joueurCherche.evaluations;
+                                    monAppli.joueurs.set(monAppli.joueurs.indexOf(joueurCherche),t);
+                                    System.out.println("Joueur -> Testeur");
+                                }else if (estTesteurChr){
+                                    Joueur t = new Administrateur(joueurCherche.pseudo);
+                                    t.nbJeton = joueurCherche.nbJeton;
+                                    t.jeuxPossedes = joueurCherche.jeuxPossedes;
+                                    t.evaluations = joueurCherche.evaluations;
+                                    monAppli.joueurs.set(monAppli.joueurs.indexOf(joueurCherche),t);
+                                    System.out.println("Testeur -> Administrateur");
+                                }
+                                break;
+                        }
+                        break;
                 }
             }
 
-
             if (chercherJeu){
                 Jeu jeu = monAppli.RecupererJeuCommande();
+                boolean jeuPossede = false;
                 if (jeu == null) System.out.println("Le jeu n'existe pas dans l'application.");
                 else jeu.Afficher();
+
+                if (!estConnecte){
+                    choixPossibles = new String[]{
+                        "Retourner a l'accueil",
+                        "Choisir un support",
+                    };
+                }else { //a ce niveau tous les utilisateurs ont les memes permissions
+                    choixPossibles = new String[]{
+                        "Retourner a l'accueil",
+                        "Choisir un support",
+                        "Voter pour un test sur ce jeu",
+                        "Ajouter ce jeu a ma librairie"
+                    };
+                    jeuPossede = joueur.jeuxPossedes.containsKey(jeu);
+                    if (jeuPossede) choixPossibles[3] = "Changer mon temps de jeu";
+                }
+
+                choix = monAppli.ProposerChoix("Que souhaitez-vous faire ?" , choixPossibles);
+                switch (choix){
+                    case 1:
+                        //rien a faire
+                        break;
+                    case 2:
+                        Support support = monAppli.ChoisirSupport(jeu);
+                        System.out.println("\nDetail du support : \n" + support.toString());
+                        System.out.println("\n---Evaluation de joueurs sur ce support---");
+                        support.AfficherEvalJoueur(estAdmin);
+
+                        choixPossibles = new String[]{
+                                "Ajouter une evaluation",
+                                "Evaluer une evaluation",
+                                "Annuler"
+                        };
+                        if (estAdmin) {
+                            choixPossibles = new String[]{
+                                    "Ajouter une evaluation",
+                                    "Evaluer une evaluation",
+                                    "Annuler",
+                                    "Supprimer une evaluation"
+                            };
+                        }
+                        choix = monAppli.ProposerChoix("Que souhaitez vous faire ?" , choixPossibles);
+                        Evaluation eval = null;
+                        switch (choix){
+                            case 1:
+                                if (joueur.jeuxPossedes.containsKey(jeu)) monAppli.AjouterEvaluation(joueur,support);
+                                else System.out.println("Vous ne posseder pas ce jeu !");
+                                break;
+                            case 2:
+                                eval = monAppli.ChoisirEvaluation(support);
+                                monAppli.Evaluer((EvaluationJoueur) eval);
+                                break;
+                            case 3:
+                                //rien a faire
+                            case 4:
+                                eval = monAppli.ChoisirEvaluation(support);
+                                System.out.println("Fonctionnalite non finie !");
+                                break;
+                        }
+
+                        break;
+                    case 3:
+                        monAppli.VoteTestJeu(joueur,jeu);
+                        break;
+                    case 4:
+                        joueur.jeuxPossedes.put(jeu , monAppli.DemanderTJ());
+                }
             }
 
             if (fermer){

@@ -22,11 +22,6 @@ public class EvaluationJoueur extends Evaluation{
     }
 
 
-    @Override
-    void Afficher() {
-        Afficher(false);
-    }
-
     /**
      * Affiche toutes les informations de l'évaluation.
      * Les attributs utiliteP et utiliteM ne sont affichés que pour les administrateurs.
@@ -37,13 +32,13 @@ public class EvaluationJoueur extends Evaluation{
     public void Afficher(boolean estAdmin) {
         System.out.println("Date : " + date);
         System.out.println("Evaluation : " + evaluation);
-        System.out.println("Version (support) : " + (version != null ? version.toString() : "Non spécifié"));
-        System.out.println("Auteur : " + (auteur != null ? auteur.toString() : "Non spécifié"));
+        System.out.println("Auteur : " + (auteur != null ? auteur.pseudo : "Non spécifié"));
         System.out.println("Note : " + note);
 
         if (estAdmin) {
-            System.out.println("UtiliteP : " + utiliteP);
-            System.out.println("UtiliteM : " + utiliteM);
+            System.out.println("+ : " + utiliteP);
+            System.out.println("- : " + utiliteM);
+            System.out.println(signalement + " signalement.s");
         }
     }
 

@@ -29,8 +29,28 @@ public class Support {
     }
 
     @Override
-    public String toString(){
-        String str = "";
-        return nom + " : annee " + anneeSortie + ", developpeur : " + developpeur + ", nombre de ventes mondiales : " + nbVentesMonde + ", nombre de critique de testeur : " + nbCritiqueTesteur + ", score moyen des testeurs : " + scoreMoyenTesteur + ", nombre de critique de joueur : " + nbCritiqueJoueur + ", score moyen des joueurs : " + scoreMoyenJoueur;
+    public String toString() {
+        return String.format(
+                "%s :\n" +
+                        "  Annee de sortie : %s\n" +
+                        "  Developpeur : %s\n" +
+                        "  Ventes mondiales : %.2f\n" +
+                        "  Critiques testeurs : %d (score moyen : %.2f)\n" +
+                        "  Critiques joueurs : %d (score moyen : %.2f)",
+                nom, anneeSortie, developpeur, nbVentesMonde,
+                nbCritiqueTesteur, scoreMoyenTesteur,
+                nbCritiqueJoueur, scoreMoyenJoueur
+        );
+    }
+
+    public void AfficherEvalJoueur(boolean admin){
+        if (evaluationJoueurs.size() == 0) System.out.println("Aucune evaluation pour le moment sur ce support");
+        else{
+            for (Evaluation eval : evaluationJoueurs){
+                eval.Afficher(admin);
+                System.out.println("");
+            }
+        }
+
     }
 }

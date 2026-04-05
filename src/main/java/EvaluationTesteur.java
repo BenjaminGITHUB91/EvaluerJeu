@@ -36,7 +36,7 @@ public class EvaluationTesteur extends Evaluation {
     }
 
     @Override
-    public void Afficher(){
+    public void Afficher(boolean admin){
         System.out.println("Date du test : " + date + ", auteur : " + auteur.pseudo);
         System.out.println("Test de la version : " + version.toString());
         System.out.println(evaluation);

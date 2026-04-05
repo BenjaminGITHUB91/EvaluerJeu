@@ -24,10 +24,6 @@ public class Jeu {
 
     public void Afficher(){
         System.out.println(this);
-        int cpt = 1;
-        for (Support unSupport : supports){
-            System.out.println( cpt + " - " + unSupport);
-        }
     }
 
     public void AfficherEvalTesteur(){
@@ -36,7 +32,7 @@ public class Jeu {
                 System.out.println("Le support '" + unSupport.nom + "' n'a pas ete evalue par des testeurs.");
             }else{
                 for (Evaluation evaluationTesteur : unSupport.evaluationTesteurs){
-                    evaluationTesteur.Afficher();
+                    evaluationTesteur.Afficher(false);
                 }
             }
         }

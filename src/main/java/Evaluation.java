@@ -11,5 +11,5 @@ public abstract class Evaluation {
         this.auteur = auteur;
     }
 
-    abstract void Afficher();
+    abstract void Afficher(boolean admin);
 }
