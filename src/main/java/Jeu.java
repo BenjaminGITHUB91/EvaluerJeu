@@ -9,6 +9,8 @@ public class Jeu {
 
     protected ArrayList<Support> supports;
 
+    protected int jetons;
+
     public Jeu(String nom , String categorie , String editeur , String classement){
         this.nom = nom;
         this.categorie = categorie;
@@ -16,12 +18,27 @@ public class Jeu {
         this.classement = classement;
 
         supports = new ArrayList<>();
+
+        jetons = 0;
     }
 
     public void Afficher(){
         System.out.println(this);
+        int cpt = 1;
         for (Support unSupport : supports){
-            System.out.println(unSupport);
+            System.out.println( cpt + " - " + unSupport);
+        }
+    }
+
+    public void AfficherEvalTesteur(){
+        for (Support unSupport : supports){
+            if (unSupport.evaluationTesteurs.size() == 0){
+                System.out.println("Le support '" + unSupport.nom + "' n'a pas ete evalue par des testeurs.");
+            }else{
+                for (Evaluation evaluationTesteur : unSupport.evaluationTesteurs){
+                    evaluationTesteur.Afficher();
+                }
+            }
         }
     }
 

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Support {
     protected String nom;
     protected String anneeSortie;
@@ -8,7 +10,11 @@ public class Support {
     protected int nbCritiqueJoueur;
     protected float scoreMoyenJoueur;
 
-    public Support(String nom, String anneeSortie, String developpeur, float nbVentesMonde, int nbCritiqueTesteur, float scoreMoyenTesteur, int nbCritiqueJoueur, float scoreMoyenJoueur) {
+    protected ArrayList<Evaluation> evaluationJoueurs;
+    protected ArrayList<Evaluation> evaluationTesteurs;
+
+    public Support(String nom, String anneeSortie, String developpeur, float nbVentesMonde,
+                   int nbCritiqueTesteur, float scoreMoyenTesteur, int nbCritiqueJoueur, float scoreMoyenJoueur) {
         this.nom = nom;
         this.anneeSortie = anneeSortie;
         this.developpeur = developpeur;
@@ -17,6 +23,9 @@ public class Support {
         this.scoreMoyenTesteur = scoreMoyenTesteur;
         this.nbCritiqueJoueur = nbCritiqueJoueur;
         this.scoreMoyenJoueur = scoreMoyenJoueur;
+
+        evaluationJoueurs = new ArrayList<>();
+        evaluationTesteurs = new ArrayList<>();
     }
 
     @Override
